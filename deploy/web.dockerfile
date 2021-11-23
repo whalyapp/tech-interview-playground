@@ -6,7 +6,7 @@ COPY web/package.json ./
 
 RUN npm install
 
-COPY web/ ./web/
+COPY web/ ./
 
 ENV NODE_ENV=development
 
