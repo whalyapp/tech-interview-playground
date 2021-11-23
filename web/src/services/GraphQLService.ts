@@ -1,7 +1,7 @@
 import ApiService from './ApiService';
 
 export default (query: string, variables: object, queryType?: string) => {
-  return ApiService.postRequest('graphql', {
+  return ApiService.postRequest('', {
     query: query,
     variables: variables
   })

@@ -16,11 +16,11 @@ docker_build_with_restart(
     only=['./api/'],
     live_update=[
         sync('./api/', '/app/'),
-        run('npm run build'),
         run(
             'npm install',
             trigger=['./api/package.json', './api/package-lock.json']
-        )
+        ),
+        run('npm run build')
     ],
     entrypoint='npm start'
 )
@@ -38,11 +38,9 @@ k8s_resource(
     labels=['backend']
 )
 
-# blog-web is the frontend (ReactJS/vite app)
+# blog-web is the frontend (ReactJS app)
 # live_update syncs changed source files to the correct place for vite to pick up
 # and runs yarn (JS dependency manager) to update dependencies when changed
-# if vite.config.js changes, a full rebuild is performed because it cannot be
-# changed dynamically at runtime
 # https://docs.tilt.dev/api.html#api.docker_build
 # https://docs.tilt.dev/live_update_reference.html
 docker_build(
@@ -71,6 +69,20 @@ k8s_resource(
     'web',
     port_forwards='5735:3000',
     labels=['frontend']
+)
+
+docker_build(
+    'blog-db',
+    context='.',
+    dockerfile='./deploy/db.dockerfile'
+)
+
+k8s_yaml('deploy/db.yaml')
+
+k8s_resource(
+    'db',
+    port_forwards='5433:5432',
+    labels=['db']
 )
 
 # print writes messages to the (Tiltfile) log in the Tilt UI

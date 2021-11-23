@@ -1,4 +1,5 @@
 import express from "express";
+import { runSQLQuery } from "../service/postgres";
 
 export const runExpressServer = (): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -10,6 +11,13 @@ export const runExpressServer = (): Promise<void> => {
         app.get("/ready", (req, res, next) => {
             res.status(200)
             res.json({})
+        })
+
+        // SQL test
+        app.get("/sqltest", async (req, res, next) => {
+            const nowFromPg = await runSQLQuery('SELECT NOW()')
+            res.status(200)
+            res.json({result: nowFromPg})
         })
 
         app.listen(app.get("port"), () => {
