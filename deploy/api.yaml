@@ -32,6 +32,11 @@ spec:
   selector:
     app: blog-api
   ports:
-    - protocol: TCP
+    - name: api
+      protocol: TCP
       port: 80
       targetPort: 5000
+    - name: apollo
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

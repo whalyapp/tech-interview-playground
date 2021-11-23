@@ -1,24 +1,28 @@
+load('ext://restart_process', 'docker_build_with_restart')
+
 # version_settings() enforces a minimum Tilt version
 # https://docs.tilt.dev/api.html#api.version_settings
 version_settings(constraint='>=0.22.2')
 
-# blog-api is the backend (Python/Flask app)
-# live_update syncs changed source code files to the correct place for the Flask dev server
-# and runs pip (python package manager) to update dependencies when changed
+# blog-api is the backend (Typescript/Apollo+Express app)
+# live_update syncs changed source code files to the correct place
+# and runs npm (node package manager) to update dependencies when changed
 # https://docs.tilt.dev/api.html#api.docker_build
 # https://docs.tilt.dev/live_update_reference.html
-docker_build(
+docker_build_with_restart(
     'blog-api',
     context='.',
     dockerfile='./deploy/api.dockerfile',
     only=['./api/'],
     live_update=[
-        sync('./api/', '/app/api/'),
+        sync('./api/', '/app/'),
+        run('npm run build'),
         run(
             'npm install',
             trigger=['./api/package.json', './api/package-lock.json']
         )
-    ]
+    ],
+    entrypoint='npm start'
 )
 
 # k8s_yaml automatically creates resources in Tilt for the entities
@@ -30,7 +34,7 @@ k8s_yaml('deploy/api.yaml')
 # https://docs.tilt.dev/api.html#api.k8s_resource
 k8s_resource(
     'api',
-    port_forwards='5734:5000',
+    port_forwards=['5000:5000', '4000:4000'],
     labels=['backend']
 )
 
