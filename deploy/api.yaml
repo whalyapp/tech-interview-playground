@@ -23,6 +23,15 @@ spec:
             httpGet:
               port: 5000
               path: '/ready'
+          env:
+            - name: PGHOST
+              value: "db.default"
+            - name: PGUSER
+              value: postgres
+            - name: PGPORT
+              value: "5432"
+            - name: PGDATABASE
+              value: postgres
 ---
 apiVersion: v1
 kind: Service
@@ -32,7 +41,7 @@ spec:
   selector:
     app: blog-api
   ports:
-    - name: api
+    - name: express
       protocol: TCP
       port: 80
       targetPort: 5000
