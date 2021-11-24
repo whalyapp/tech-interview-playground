@@ -18,6 +18,7 @@ Open tilt control pane by going to [http://localhost:10350](http://localhost:103
 ## Check that your local env is correctly setup
 
 a. Go to: http://localhost:5735/ and check the Hello World frontend
+
 b. Run:
 ```
 curl --location --request POST 'http://localhost:4000' \
