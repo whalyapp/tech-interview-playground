@@ -50,3 +50,23 @@ curl --location --request GET 'http://localhost:5000/sqltest'
     }
 }
 ```
+
+d. Run:
+```shell
+psql -U postgres -h 127.0.0.1 -p 5433
+
+\d
+```
+
+-> You should have:
+```
+postgres-# \d
+           List of relations
+ Schema |    Name    | Type  |  Owner   
+--------+------------+-------+----------
+ public | article    | table | postgres
+ public | articletag | table | postgres
+ public | author     | table | postgres
+ public | tag        | table | postgres
+(4 rows)
+```
